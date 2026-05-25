@@ -1,0 +1,60 @@
+.hero {
+    min-height: calc(100vh - 50px);
+    background-color: #c1121f;
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 48px;
+    text-align: center;
+}
+
+.hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+.brand {
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    font-family: Georgia, serif;
+}
+
+.hero-content h1 {
+    color: white;
+    font-size: 4rem;
+    font-weight: 300;
+    line-height: 1.15;
+    letter-spacing: 2px;
+    font-family: "Arial", sans-serif;
+    text-transform: uppercase;
+}
+
+.hero-btn {
+    background: #f5c518;
+    border: none;
+    padding: 16px 48px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+}
+
+.hero-btn:hover {
+    background: #e6b800;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 600px) {
+    .hero-content h1 {
+        font-size: 2.4rem;
+    }
+}

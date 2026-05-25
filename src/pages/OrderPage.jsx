@@ -3,15 +3,18 @@ import axios from "axios";
 
 const malzemelerListesi = [
   "Pepperoni",
-  "Mantar",
   "Sosis",
+  "Kanada Jambonu",
+  "Tavuk Izgara",
+  "Soğan",
+  "Domates",
   "Mısır",
   "Sucuk",
-  "Zeytin",
-  "Soğan",
+  "Jalepeno",
+  "Sarımsak",
   "Biber",
-  "Mozzarella",
   "Ananas",
+  "Kabak",
 ];
 
 const initialForm = {
@@ -26,14 +29,17 @@ export default function OrderPage() {
 
   const [isValid, setIsValid] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
-    const isimValid = formData.isim.trim().length >= 3;
+    const isimValid =
+      formData.isim.trim().length >= 3;
 
     const malzemeValid =
-      formData.malzemeler.length >= 4 &&
       formData.malzemeler.length <= 10;
 
-    const boyutValid = formData.boyut !== "";
+    const boyutValid =
+      formData.boyut !== "";
 
     setIsValid(
       isimValid &&
@@ -43,7 +49,8 @@ export default function OrderPage() {
   }, [formData]);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, type, checked } =
+      e.target;
 
     if (type === "checkbox") {
       if (checked) {
@@ -77,6 +84,8 @@ export default function OrderPage() {
     if (!isValid) return;
 
     try {
+      setLoading(true);
+
       const response = await axios.post(
         "https://reqres.in/api/pizza",
         formData,
@@ -90,8 +99,12 @@ export default function OrderPage() {
       console.log("Sipariş Özeti:");
       console.log(response.data);
 
+      setFormData(initialForm);
+
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -112,6 +125,20 @@ export default function OrderPage() {
           required
         />
 
+        {formData.isim.length > 0 &&
+          formData.isim.length < 3 && (
+            <p>
+              İsim en az 3 karakter olmalı.
+            </p>
+          )}
+
+          <p className="pizza-describe">
+            Frontend Dev olarak hala position:absolute kullanıyorsan bu çok acı pizza tam sana göre.
+            Pizza, domates, peynir ve genellikle çeşitli diğer malzemelerle kaplanmış, daha sonra
+            geleneksel olarak odun ateşinde bir fırında yüksek sıcaklıkta pişirilen lezzetli bir
+            İtalyan yemeğidir.
+          </p>
+
         <h3>Pizza Boyutu</h3>
 
         <label>
@@ -120,6 +147,9 @@ export default function OrderPage() {
             name="boyut"
             value="Küçük"
             onChange={handleChange}
+            checked={
+              formData.boyut === "Küçük"
+            }
           />
           Küçük
         </label>
@@ -130,6 +160,9 @@ export default function OrderPage() {
             name="boyut"
             value="Orta"
             onChange={handleChange}
+            checked={
+              formData.boyut === "Orta"
+            }
           />
           Orta
         </label>
@@ -140,27 +173,44 @@ export default function OrderPage() {
             name="boyut"
             value="Büyük"
             onChange={handleChange}
+            checked={
+              formData.boyut === "Büyük"
+            }
           />
           Büyük
         </label>
 
+        {!formData.boyut && (
+          <p>Pizza boyutu seç.</p>
+        )}
+
         <h3>Malzemeler</h3>
 
-        {malzemelerListesi.map((malzeme) => (
-          <label key={malzeme}>
-            <input
-              type="checkbox"
-              value={malzeme}
-              onChange={handleChange}
-            />
+        {malzemelerListesi.map(
+          (malzeme) => (
+            <label key={malzeme}>
+              <input
+                type="checkbox"
+                value={malzeme}
+                onChange={handleChange}
+                checked={formData.malzemeler.includes(
+                  malzeme
+                )}
+              />
 
-            {malzeme}
-          </label>
-        ))}
+              {malzeme}
+            </label>
+          )
+        )}
 
-        <p>
-          En az 4, en fazla 10 malzeme seç.
-        </p>
+        {(formData.malzemeler.length < 4 ||
+          formData.malzemeler.length >
+            10) && (
+          <p>
+            En az 4, en fazla 10
+            malzeme seç.
+          </p>
+        )}
 
         <h3>Sipariş Notu</h3>
 
@@ -174,10 +224,13 @@ export default function OrderPage() {
 
         <button
           type="submit"
-          disabled={!isValid}
+          disabled={!isValid || loading}
         >
-          Sipariş Ver
+          {loading
+            ? "Gönderiliyor..."
+            : "Sipariş Ver"}
         </button>
+
       </form>
     </div>
   );
