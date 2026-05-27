@@ -6,7 +6,7 @@ export default function HomePage() {
   return (
     <div className="home-page">
 
-      {/* Hero — arka plan resim */}
+      {/* Hero resmi */}
       <div className="hero" style={{ backgroundImage: `url(${homeImg})` }}>
         <div className="hero-content">
           <Link to="/order">
@@ -15,7 +15,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Kategori bar */}
+      {/* Kategori bar ve simgeler - https://emojipedia.org/food-drink buradan aldım */}
       <div className="kategori-bar">
         {["🍜 YENİ! Kore", "🍕 Pizza", "🍔 Burger", "🍟 Kızartmalar", "🌮 Fast food", "🥤 Gazlı İçecek"].map((item) => (
           <span key={item} className="kategori-item">{item}</span>
@@ -61,7 +61,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Menüler */}
+      {/* Menü */}
       <div className="menu-section">
         <p className="menu-subtitle">en çok paketlenen menüler</p>
         <h2 className="menu-title">Acıktıran Kodlara Doyuran Lezzetler</h2>

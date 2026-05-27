@@ -8,7 +8,7 @@
     font-family: 'Roboto', sans-serif;
 }
 
-/* ─── HERO ─────────────────────────── */
+/*hero*/
 
 .hero {
     height: 60vh;
@@ -22,34 +22,36 @@
 
 .hero-content {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
 }
 
 .hero-btn {
-    background: #f5c518;
+    background: #FDC913;
     border: none;
-    padding: 16px 32px;
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    border-radius: 50px;
+    padding: 10px 24px;
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    border-radius: 30px;
     cursor: pointer;
     font-family: 'Roboto', sans-serif;
-    transition: background 0.2s;
+    transition: background 0.5s;
 }
 
 .hero-btn:hover {
     background: #b49000;
 }
 
-/* ─── KATEGORİ BAR ──────────────────── */
+/*kategori bar*/
 
 .kategori-bar {
     display: flex;
     justify-content: center;
     gap: 32px;
     padding: 20px 48px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid white;
     flex-wrap: wrap;
 }
 
@@ -63,11 +65,11 @@
     color: #CE2829;
 }
 
-/* ─── FEATURED ──────────────────────── */
+/*öne çıkan kartlar*/
 
 .featured-section {
     padding: 40px 48px;
-    background: #f5f0e8;
+    background: #FAF7F2;
 }
 
 .featured-grid {
@@ -156,7 +158,7 @@
     background: #f0f0f0;
 }
 
-/* ─── MENÜLER ───────────────────────── */
+/*menü*/
 
 .menu-section {
     padding: 60px 48px;
@@ -246,7 +248,7 @@
     color: #1a1a1a;
 }
 
-/* ─── FOOTER ────────────────────────── */
+/*footer*/
 
 .footer {
     background: #1a1a1a;
@@ -316,7 +318,7 @@
     color: #666;
 }
 
-/* ─── RESPONSIVE ────────────────────── */
+/*responsive olması için olan section*/
 
 @media (max-width: 600px) {
     .hero {
