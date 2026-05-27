@@ -172,13 +172,32 @@ export default function OrderPage() {
             />
           </div>
 
-          <button
-            type="submit"
-            className="submit-btn"
-            disabled={!isValid || loading}
-          >
-            {loading ? "Gönderiliyor..." : "SİPARİŞ VER"}
-          </button>
+          <div className="siparis-ozet">
+
+  {/* Seçimler satırı */}
+  <div className="ozet-row">
+    <span>Seçimler</span>
+    <span>{(formData.malzemeler.length * 5).toFixed(2)}₺</span>
+  </div>
+
+  {/* Toplam satırı */}
+  <div className="ozet-row toplam">
+    <span>Toplam</span>
+    <span className="toplam-fiyat">
+      {(85.50 + formData.malzemeler.length * 5).toFixed(2)}₺
+    </span>
+  </div>
+
+  {/* Sipariş butonu */}
+  <button
+    type="submit"
+    className="submit-btn"
+    disabled={!isValid || loading}
+  >
+    {loading ? "Gönderiliyor..." : "SİPARİŞ VER"}
+  </button>
+
+</div>
 
         </form>
       </main>

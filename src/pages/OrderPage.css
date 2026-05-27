@@ -107,18 +107,17 @@
 .form-group textarea {
     width: 100%;
     padding: 10px 14px;
-    border: 1px solid #ccc;
+    border: 1px solid #5F5F5F;
     border-radius: 4px;
     font-size: 0.9rem;
-    font-family: inherit;
+    font-family: 'Barlow', sans-serif;
     outline: none;
-    transition: border 0.2s;
 }
 
 .form-group input[type="text"]:focus,
 .form-group select:focus,
 .form-group textarea:focus {
-    border-color: #c1121f;
+    border-color: #CE2829;
 }
 
 .form-row {
@@ -185,6 +184,39 @@
     margin-top: 6px;
 }
 
+/* Sipariş özet kutusu */
+.siparis-ozet {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 20px 24px;
+    margin-top: 24px;
+}
+
+/* Seçimler ve toplam satırları */
+.ozet-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+/* Toplam satırı farklı stil */
+.ozet-row.toplam {
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 16px;
+}
+
+/* Toplam fiyat kırmızı */
+.toplam-fiyat {
+    color: #c1121f;
+    font-weight: 800;
+}
+
+/* Sipariş ver butonu */
 .submit-btn {
     display: block;
     width: 100%;
@@ -196,14 +228,15 @@
     font-weight: 800;
     letter-spacing: 1px;
     cursor: pointer;
-    margin-top: 24px;
-    transition: background 0.2s, opacity 0.2s;
+    transition: background 0.2s;
 }
 
+/* Hover durumu */
 .submit-btn:hover:not(:disabled) {
     background: #e6b800;
 }
 
+/* Disabled durumu */
 .submit-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
