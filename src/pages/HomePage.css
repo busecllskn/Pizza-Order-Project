@@ -279,7 +279,7 @@
 .footer-links h4,
 .footer-instagram h4 {
     font-size: 1rem;
-    font-weight: 700;
+    font-weight: 500;
     margin-bottom: 16px;
 }
 
@@ -305,7 +305,7 @@
 }
 
 .instagram-item {
-    width: 100%;
+    width: 30%;
     aspect-ratio: 1;
     background: #333;
     border-radius: 4px;
