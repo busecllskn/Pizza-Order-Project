@@ -5,25 +5,27 @@ import "./OrderPage.css";
 
 const malzemelerListesi = [
   "Pepperoni",
-  "Sosis",
-  "Kanada Jambonu",
-  "Tavuk Izgara",
-  "Soğan",
   "Domates",
+  "Biber",
+  "Sosis",
   "Mısır",
   "Sucuk",
-  "Jalepeno",
-  "Sarımsak",
-  "Biber",
+  "Kanada Jambonu",
   "Ananas",
+  "Tavuk Izgara",
+  "Jalepeno",
   "Kabak",
+  "Soğan",
+  "Sarımsak",
 ];
 
 const initialForm = {
-  isim: "",
   boyut: "",
+  hamur: "",
   malzemeler: [],
+  isim: "",
   not: "",
+  adet: 1,
 };
 
 export default function OrderPage() {
@@ -32,21 +34,20 @@ export default function OrderPage() {
   const [isValid, setIsValid] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  //3 koşulu sağlıyor mu kontrolünü etmek için
   useEffect(() => {
     const isimValid = formData.isim.trim().length >= 3;
-    const malzemeValid = formData.malzemeler.length <= 10;
+    const malzemeValid =
+      formData.malzemeler.length >= 4 && formData.malzemeler.length <= 10;
     const boyutValid = formData.boyut !== "";
     setIsValid(isimValid && malzemeValid && boyutValid);
   }, [formData]);
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+  const handleChange = (event) => {
+    const { name, value, type, checked } = event.target;
 
     if (type === "checkbox") {
-      if (checked && formData.malzemeler.length >= 10) {
-        alert("En fazla 10 malzeme seçebilirsiniz.");
-        return;
-      }
+      if (checked && formData.malzemeler.length >= 10) return;
       const yeniMalzemeler = checked
         ? [...formData.malzemeler, value]
         : formData.malzemeler.filter((item) => item !== value);
@@ -56,32 +57,46 @@ export default function OrderPage() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleAdetArtir = () => {
+    setFormData((prev) => ({ ...prev, adet: prev.adet + 1 }));
+  };
+
+  const handleAdetAzalt = () => {
+    setFormData((prev) => ({
+      ...prev,
+      adet: prev.adet > 1 ? prev.adet - 1 : 1,
+    }));
+  };
+
+  const birimFiyat = 85.5 + formData.malzemeler.length * 5;
+  const toplamFiyat = birimFiyat * formData.adet;
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
     if (!isValid) return;
-    try {
-      setLoading(true);
-      const response = await axios.post(
-        "https://reqres.in/api/pizza",
-        formData,
-        { headers: { "x-api-key": "reqres-free-v1" } },
-      );
-      console.log("Sipariş Özeti:");
-      console.log(response.data);
-      setFormData(initialForm);
-      history.push("/confirmation");
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
+    setLoading(true);
+    axios
+      .post("https://reqres.in/api/pizza", formData, {
+        headers: { "x-api-key": "reqres-free-v1" },
+      })
+      .then((response) => {
+        console.log("Sipariş Özeti:", response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setLoading(false);
+        setFormData(initialForm);
+        history.push("/confirmation");
+      });
   };
 
   return (
     <div className="order-page">
       <header className="order-header">
         <h1>Teknolojik Yemekler</h1>
-        <nav className="breadcrumb">
+        <nav className="altbaslik">
           <a href="/">Anasayfa</a>
           <span> - </span>
           <span>Seçenekler</span>
@@ -91,7 +106,7 @@ export default function OrderPage() {
       </header>
 
       <main className="order-main">
-        <form onSubmit={handleSubmit} noValidate>
+        <form onSubmit={handleSubmit}>
           <h2 className="pizza-baslik">Position Absolute Acı Pizza</h2>
 
           <div className="pizza-meta">
@@ -108,8 +123,8 @@ export default function OrderPage() {
             İtalyan yemeğidir.
           </p>
 
-          {/* Boyut */}
-          <div className="form-row">
+          {/* Pizza boyutu */}
+            <div className="form-row">
             <div className="form-group">
               <label className="group-label">
                 Boyut Seç <span className="zorunlu">*</span>
@@ -128,14 +143,14 @@ export default function OrderPage() {
               ))}
             </div>
 
-            {/* Hamur - select olarak eklendi */}
+            {/* Hamur seçimi */}
             <div className="form-group">
               <label className="group-label">
                 Hamur Seç <span className="zorunlu">*</span>
               </label>
               <select
                 name="hamur"
-                value={formData.hamur || ""}
+                value={formData.hamur}
                 onChange={handleChange}
               >
                 <option value="">Hamur Kalınlığı</option>
@@ -146,7 +161,7 @@ export default function OrderPage() {
             </div>
           </div>
 
-          {/* Malzemeler */}
+          {/* Malzeme seçimi*/}
           <div className="form-group">
             <label className="group-label">Ek Malzemeler</label>
             <p className="hint">En fazla 10 malzeme seçebilirsiniz. 5₺</p>
@@ -167,6 +182,30 @@ export default function OrderPage() {
                 </label>
               ))}
             </div>
+            {formData.malzemeler.length < 4 && (
+              <span className="error-msg">
+                En az 4 malzeme seçmelisiniz. ({formData.malzemeler.length}/4)
+              </span>
+            )}
+          </div> 
+
+          {/* İsim butonu */}
+          <div className="form-group">
+            <label className="group-label">
+              İsim <span className="zorunlu">*</span>
+            </label>
+            <input
+              type="text"
+              name="isim"
+              placeholder="Adınızı giriniz"
+              value={formData.isim}
+              onChange={handleChange}
+              minLength="3"
+              required
+            />
+            {formData.isim.length > 0 && formData.isim.length < 3 && (
+              <span className="error-msg">İsim en az 3 karakter olmalı.</span>
+            )}
           </div>
 
           {/* Sipariş Notu */}
@@ -181,29 +220,46 @@ export default function OrderPage() {
             />
           </div>
 
-          <div className="siparis-ozet">
-            {/* Seçimler satırı */}
-            <div className="ozet-row">
-              <span>Seçimler</span>
-              <span>{(formData.malzemeler.length * 5).toFixed(2)}₺</span>
+          <div className="alt-row">
+            <div className="adet-kontrol">
+              <button
+                type="button"
+                className="adet-btn"
+                onClick={handleAdetAzalt}
+                disabled={formData.adet <= 1}
+              >
+                −
+              </button>
+              <span className="adet-sayi">{formData.adet}</span>
+              <button
+                type="button"
+                className="adet-btn"
+                onClick={handleAdetArtir}
+              >
+                +
+              </button>
             </div>
 
-            {/* Toplam satırı */}
-            <div className="ozet-row toplam">
-              <span>Toplam</span>
-              <span className="toplam-fiyat">
-                {(85.5 + formData.malzemeler.length * 5).toFixed(2)}₺
-              </span>
-            </div>
+            {/* Sipariş toplamı */}
+            <div className="siparis-ozet">
+              <p className="ozet-baslik">Sipariş Toplamı</p>
+              <div className="ozet-row">
+                <span>Seçimler</span>
+                <span>{(formData.malzemeler.length * 5).toFixed(2)}₺</span>
+              </div>
+              <div className="ozet-row toplam">
+                <span>Toplam</span>
+                <span className="toplam-fiyat">{toplamFiyat.toFixed(2)}₺</span>
+              </div>
 
-            {/* Sipariş butonu */}
-            <button
-              type="submit"
-              className="submit-btn"
-              disabled={!isValid || loading}
-            >
-              {loading ? "Gönderiliyor..." : "SİPARİŞ VER"}
-            </button>
+              <button
+                type="submit"
+                className="submit-btn"
+                disabled={!isValid || loading}
+              >
+                {loading ? "Gönderiliyor..." : "SİPARİŞ VER"}
+              </button>
+            </div>
           </div>
         </form>
       </main>
