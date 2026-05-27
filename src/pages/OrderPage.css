@@ -121,13 +121,6 @@
     border-color: #c1121f;
 }
 
-.error-msg {
-    display: block;
-    color: #c1121f;
-    font-size: 0.82rem;
-    margin-top: 6px;
-}
-
 .form-row {
     display: flex;
     gap: 80px;

@@ -122,7 +122,6 @@ export default function OrderPage() {
                   {boyut}
                 </label>
               ))}
-              {!formData.boyut && <span className="error-msg">Pizza boyutu seç.</span>}
             </div>
 
             {/* Hamur - select olarak eklendi */}
@@ -159,23 +158,6 @@ export default function OrderPage() {
               <span className="error-msg">En az 4, en fazla 10 malzeme seç.</span>
             )}
             <span className="malzeme-count">{formData.malzemeler.length}/10 seçildi</span>
-          </div>
-
-          {/* İsim */}
-          <div className="form-group">
-            <label className="group-label">İsim <span className="zorunlu">*</span></label>
-            <input
-              type="text"
-              name="isim"
-              placeholder="Adınızı giriniz"
-              value={formData.isim}
-              onChange={handleChange}
-              minLength="3"
-              required
-            />
-            {formData.isim.length > 0 && formData.isim.length < 3 && (
-              <span className="error-msg">İsim en az 3 karakter olmalı.</span>
-            )}
           </div>
 
           {/* Sipariş Notu */}
