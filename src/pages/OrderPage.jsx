@@ -4,18 +4,18 @@ import axios from "axios";
 import "./OrderPage.css";
 
 const malzemelerListesi = [
-  "Pepperoni", 
-  "Sosis", 
-  "Kanada Jambonu", 
-  "Tavuk Izgara", 
+  "Pepperoni",
+  "Sosis",
+  "Kanada Jambonu",
+  "Tavuk Izgara",
   "Soğan",
-  "Domates", 
-  "Mısır", 
-  "Sucuk", 
-  "Jalepeno", 
+  "Domates",
+  "Mısır",
+  "Sucuk",
+  "Jalepeno",
   "Sarımsak",
-  "Biber", 
-  "Ananas", 
+  "Biber",
+  "Ananas",
   "Kabak",
 ];
 
@@ -34,20 +34,23 @@ export default function OrderPage() {
 
   useEffect(() => {
     const isimValid = formData.isim.trim().length >= 3;
-    const malzemeValid = formData.malzemeler.length >= 4 && formData.malzemeler.length <= 10;
+    const malzemeValid = formData.malzemeler.length <= 10;
     const boyutValid = formData.boyut !== "";
     setIsValid(isimValid && malzemeValid && boyutValid);
   }, [formData]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+
     if (type === "checkbox") {
-      if (checked) {
-        if (formData.malzemeler.length >= 10) return;
-        setFormData({ ...formData, malzemeler: [...formData.malzemeler, value] });
-      } else {
-        setFormData({ ...formData, malzemeler: formData.malzemeler.filter((item) => item !== value) });
+      if (checked && formData.malzemeler.length >= 10) {
+        alert("En fazla 10 malzeme seçebilirsiniz.");
+        return;
       }
+      const yeniMalzemeler = checked
+        ? [...formData.malzemeler, value]
+        : formData.malzemeler.filter((item) => item !== value);
+      setFormData({ ...formData, malzemeler: yeniMalzemeler });
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -61,7 +64,7 @@ export default function OrderPage() {
       const response = await axios.post(
         "https://reqres.in/api/pizza",
         formData,
-        { headers: { "x-api-key": "reqres-free-v1" } }
+        { headers: { "x-api-key": "reqres-free-v1" } },
       );
       console.log("Sipariş Özeti:");
       console.log(response.data);
@@ -76,7 +79,6 @@ export default function OrderPage() {
 
   return (
     <div className="order-page">
-
       <header className="order-header">
         <h1>Teknolojik Yemekler</h1>
         <nav className="breadcrumb">
@@ -90,7 +92,6 @@ export default function OrderPage() {
 
       <main className="order-main">
         <form onSubmit={handleSubmit} noValidate>
-
           <h2 className="pizza-baslik">Position Absolute Acı Pizza</h2>
 
           <div className="pizza-meta">
@@ -100,16 +101,19 @@ export default function OrderPage() {
           </div>
 
           <p className="pizza-aciklama">
-            Frontent Dev olarak hala position:absolute kullanıyorsan bu çok acı pizza tam sana göre.
-            Pizza, domates, peynir ve genellikle çeşitli diğer malzemelerle kaplanmış, daha sonra
-            geleneksel olarak odun ateşinde bir fırında yüksek sıcaklıkta pişirilen lezzetli bir
+            Frontent Dev olarak hala position:absolute kullanıyorsan bu çok acı
+            pizza tam sana göre. Pizza, domates, peynir ve genellikle çeşitli
+            diğer malzemelerle kaplanmış, daha sonra geleneksel olarak odun
+            ateşinde bir fırında yüksek sıcaklıkta pişirilen lezzetli bir
             İtalyan yemeğidir.
           </p>
 
           {/* Boyut */}
           <div className="form-row">
             <div className="form-group">
-              <label className="group-label">Boyut Seç <span className="zorunlu">*</span></label>
+              <label className="group-label">
+                Boyut Seç <span className="zorunlu">*</span>
+              </label>
               {["Küçük", "Orta", "Büyük"].map((boyut) => (
                 <label key={boyut} className="radio-label">
                   <input
@@ -126,8 +130,14 @@ export default function OrderPage() {
 
             {/* Hamur - select olarak eklendi */}
             <div className="form-group">
-              <label className="group-label">Hamur Seç <span className="zorunlu">*</span></label>
-              <select name="hamur" value={formData.hamur || ""} onChange={handleChange}>
+              <label className="group-label">
+                Hamur Seç <span className="zorunlu">*</span>
+              </label>
+              <select
+                name="hamur"
+                value={formData.hamur || ""}
+                onChange={handleChange}
+              >
                 <option value="">Hamur Kalınlığı</option>
                 <option value="İnce">İnce</option>
                 <option value="Normal">Normal</option>
@@ -139,7 +149,7 @@ export default function OrderPage() {
           {/* Malzemeler */}
           <div className="form-group">
             <label className="group-label">Ek Malzemeler</label>
-            <p className="hint">En Fazla 10 malzeme seçebilirsiniz. 5₺</p>
+            <p className="hint">En fazla 10 malzeme seçebilirsiniz. 5₺</p>
             <div className="malzeme-grid">
               {malzemelerListesi.map((malzeme) => (
                 <label key={malzeme} className="checkbox-label">
@@ -148,16 +158,15 @@ export default function OrderPage() {
                     value={malzeme}
                     onChange={handleChange}
                     checked={formData.malzemeler.includes(malzeme)}
-                    disabled={!formData.malzemeler.includes(malzeme) && formData.malzemeler.length >= 10}
+                    disabled={
+                      !formData.malzemeler.includes(malzeme) &&
+                      formData.malzemeler.length >= 10
+                    }
                   />
                   {malzeme}
                 </label>
               ))}
             </div>
-            {(formData.malzemeler.length < 4 || formData.malzemeler.length > 10) && (
-              <span className="error-msg">En az 4, en fazla 10 malzeme seç.</span>
-            )}
-            <span className="malzeme-count">{formData.malzemeler.length}/10 seçildi</span>
           </div>
 
           {/* Sipariş Notu */}
@@ -173,32 +182,29 @@ export default function OrderPage() {
           </div>
 
           <div className="siparis-ozet">
+            {/* Seçimler satırı */}
+            <div className="ozet-row">
+              <span>Seçimler</span>
+              <span>{(formData.malzemeler.length * 5).toFixed(2)}₺</span>
+            </div>
 
-  {/* Seçimler satırı */}
-  <div className="ozet-row">
-    <span>Seçimler</span>
-    <span>{(formData.malzemeler.length * 5).toFixed(2)}₺</span>
-  </div>
+            {/* Toplam satırı */}
+            <div className="ozet-row toplam">
+              <span>Toplam</span>
+              <span className="toplam-fiyat">
+                {(85.5 + formData.malzemeler.length * 5).toFixed(2)}₺
+              </span>
+            </div>
 
-  {/* Toplam satırı */}
-  <div className="ozet-row toplam">
-    <span>Toplam</span>
-    <span className="toplam-fiyat">
-      {(85.50 + formData.malzemeler.length * 5).toFixed(2)}₺
-    </span>
-  </div>
-
-  {/* Sipariş butonu */}
-  <button
-    type="submit"
-    className="submit-btn"
-    disabled={!isValid || loading}
-  >
-    {loading ? "Gönderiliyor..." : "SİPARİŞ VER"}
-  </button>
-
-</div>
-
+            {/* Sipariş butonu */}
+            <button
+              type="submit"
+              className="submit-btn"
+              disabled={!isValid || loading}
+            >
+              {loading ? "Gönderiliyor..." : "SİPARİŞ VER"}
+            </button>
+          </div>
         </form>
       </main>
     </div>
