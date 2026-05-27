@@ -415,3 +415,16 @@ textarea:focus {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+/* Hata kutusu */
+.hata-kutusu {
+    background: #fff0f0;
+    border: 1.5px solid #c1121f;
+    border-radius: 6px;
+    color: #c1121f;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    text-align: center;
+}
